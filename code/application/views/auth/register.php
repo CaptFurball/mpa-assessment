@@ -23,5 +23,7 @@
 
             <input type="submit" value="Submit">
         </form>
+
+        <a href="/auth/login">Login</a>
     </body>
 </html>

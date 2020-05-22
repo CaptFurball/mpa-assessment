@@ -25,7 +25,18 @@ class Auth
     {
         $user = $this->CI->user->fetch_by_username($username);
 
-        return !empty($user) && password_verify($password, $user['password']);
+        if (!empty($user) && password_verify($password, $user['password'])) {
+            $data = array(
+				'username' => $user['username'],
+				'authenticated' => true,
+            );
+            
+            $this->CI->session->set_userdata($data);
+            
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function reset_password ($email)

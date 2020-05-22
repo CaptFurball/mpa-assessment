@@ -10,5 +10,8 @@
 
             <input type="submit" value="Submit">
         </form>
+
+        <a href="/auth/register">Register</a>
+        <a href="/auth/login">Login</a>
     </body>
 </html>

@@ -14,5 +14,8 @@
 
             <input type="submit" value="Submit">
         </form>
+
+        <a href="/auth/register">Register</a>
+        <a href="/auth/login/reset">Forgot Password</a>
     </body>
 </html>

@@ -27,9 +27,9 @@ class Login extends CI_Controller
         $res = $this->auth->validate($username, $password);
 
         if ($res === true) {
-            redirect('/dashboard');
+            redirect('dashboard');
         } else {
-            $this->session->set_flashdata('error', 'email or password incorrect');
+            $this->session->set_flashdata('error', 'username or password incorrect');
         }
     }
 
