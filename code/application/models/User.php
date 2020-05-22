@@ -13,7 +13,15 @@ class User extends CI_Model
         $this->email = $email;
         $this->password = $password_hash;
 
-        $this->db->insert('user', $this);
+        if (!$this->db->insert('user', $this)) {
+            $error = $this->db->error();
+
+            if ($error['code'] == '1062') {
+                throw new Exception('Username or email is already in used');
+            } else {
+                throw new Exception('Database error');
+            }
+        }
     }
 
     public function fetchByUsername ($username)

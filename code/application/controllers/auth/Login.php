@@ -24,10 +24,12 @@ class Login extends CI_Controller
         $username = $this->input->post('username');
         $password = $this->input->post('password');
 
-        if ($this->auth->validate($username, $password)) {
+        $res = $this->auth->validate($username, $password);
+
+        if ($res === true) {
             echo "password correct";
         } else {
-            echo "password wrong";
+            $this->session->set_flashdata('error', 'email or password incorrect');
         }
     }
 

@@ -27,6 +27,10 @@ class Register extends CI_Controller
         $email    = $this->input->post('email');
         $password = $this->input->post('password');
 
-        $this->auth->register($username, $email, $password);
+        $res = $this->auth->register($username, $email, $password);
+
+        if ($res !== true) {
+            $this->session->set_flashdata('error', $res);
+        }
     }
 }
