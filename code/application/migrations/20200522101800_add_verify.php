@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_Add_user extends CI_Migration {
+class Migration_Add_verify extends CI_Migration {
 
         public function up()
         {
@@ -12,32 +12,33 @@ class Migration_Add_user extends CI_Migration {
                             'unsigned' => TRUE,
                             'auto_increment' => TRUE
                         ],
-                        'username' => [
-                            'type' => 'VARCHAR',
-                            'constraint' => '100',
-                            'unique' => true
-                        ],
                         'email' => [
                             'type' => 'VARCHAR',
                             'constraint' => '100',
-                            'unique' => true
                         ],
-                        'password' => [
+                        'code' => [
                             'type' => 'VARCHAR',
                             'constraint' => '256',
                         ],
+                        'callback' => [
+                            'type' => 'VARCHAR',
+                            'constraint' => '100',
+                        ],
                         'active' => [
                             'type' => 'BOOLEAN',
-                            'default' => false
+                            'default' => true
+                        ],
+                        'expire' => [
+                            'type' => 'DATETIME',
                         ]
                     ]
                 );
                 $this->dbforge->add_key('id', TRUE);
-                $this->dbforge->create_table('user');
+                $this->dbforge->create_table('verify');
         }
 
         public function down()
         {
-                $this->dbforge->drop_table('user');
+                $this->dbforge->drop_table('verify');
         }
 }

@@ -9,11 +9,55 @@ class Auth
     {
         $this->CI =& get_instance();
         $this->CI->load->model('user');
+        $this->CI->load->model('verify');
     }
 
     public function register ($username, $email, $password)
     {
-        return $this->CI->user->create($username, $email, $this->hash($password));
+        $res = $this->CI->user->create($username, $email, $this->hash($password));
+        $this->request_verify($email);
+
+        return $res;
+    }
+
+    public function request_verify ($email)
+    {
+        $code = md5(uniqid($email, true));
+        $expire = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+        $this->CI->verify->create($email, $code, $expire, 'activate_account');
+    }
+
+    public function verify_account ($code)
+    {
+        $res = $this->verify($code);
+
+        if ($res !== false) {
+            $this->CI->user->activate_user($res['email']);
+        }
+    }
+
+    public function verify ($code)
+    {
+        $verification = $this->CI->verify->fetch_by_code($code);
+        
+        if (!empty($verification)) {
+
+            $callback = $verification['callback'];
+            $email = $verification['email'];
+
+            if (is_callable([$this, $callback]) && $this->$callback($email)) {
+                $this->CI->verify->burn_code($code);
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private function activate_account($email)
+    {
+        return $this->CI->user->activate_user($email);
     }
 
     public function hash ($password)

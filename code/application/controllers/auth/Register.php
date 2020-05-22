@@ -42,31 +42,14 @@ class Register extends CI_Controller
         redirect('auth/register');
     }
 
-    public function mail ()
+    public function verify ($code = null)
     {
-        $this->load->library('email');
-
-        $config = Array(
-            'protocol' => 'smtp',
-            'smtp_host' => 'smtp.mailtrap.io',
-            'smtp_port' => 2525,
-            'smtp_user' => '749602d6870fae',
-            'smtp_pass' => '579e7db6ae7bd2',
-            'crlf' => "\r\n",
-            'newline' => "\r\n"
-          );
-
-        $this->email->initialize($config);
-
-        $this->email->from('edwardlimyeesiangli@airasia.com', 'Edward Lim');
-        $this->email->to('elys.1993a@gmail.com', 'Edward Lim');
-        $this->email->subject('test');
-        $this->email->message('Hello friend');
-
-        if ($this->email->send()) {
-            echo "success";
+        if ($code && $this->auth->verify($code)) {
+            $this->session->set_flashdata('success', 'Your account is successfully activated');
+            redirect('auth/login');
         } else {
-            echo $this->email->print_debugger();
+            $this->session->set_flashdata('error', 'Your code is not valid');
+            redirect('auth/register');
         }
     }
 }
