@@ -35,5 +35,12 @@ $config = [
             'label' => 'Password',
             'rules' => 'required|min_length[8]|differs[username]|alpha_numeric'
         ]
+    ],
+    'login/reset' => [
+        [
+            'field' => 'email',
+            'label' => 'Email',
+            'rules' => 'required|valid_email'
+        ]
     ]
 ];

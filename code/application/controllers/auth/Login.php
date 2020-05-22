@@ -27,7 +27,7 @@ class Login extends CI_Controller
         $res = $this->auth->validate($username, $password);
 
         if ($res === true) {
-            echo "password correct";
+            redirect('/dashboard');
         } else {
             $this->session->set_flashdata('error', 'email or password incorrect');
         }
@@ -35,6 +35,20 @@ class Login extends CI_Controller
 
     public function reset ()
     {
+        if ($this->input->method() == 'post' && $this->form_validation->run()) {
+            $this->_reset();
+        }
+
         $this->load->view('auth/reset');
+    }
+
+    public function _reset ()
+    {
+        $email = $this->input->post('email');
+        $res   = $this->auth->reset_password($email);
+
+        if (is_string($res)) {
+            $this->session->set_flashdata('temporary_password', 'Password:' . $res);
+        }
     }
 }

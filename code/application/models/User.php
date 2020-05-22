@@ -20,7 +20,7 @@ class User extends CI_Model
         return true;
     }
 
-    public function fetchByUsername ($username)
+    public function fetch_by_username ($username)
     {
         $result = $this->db
             ->limit(1)
@@ -28,5 +28,29 @@ class User extends CI_Model
             ->result_array();
 
         return reset($result);
+    }
+
+    public function exists ($email)
+    {
+        $count = $this->db
+            ->from('user')
+            ->where('email', $email)
+            ->limit(1)
+            ->count_all_results();
+
+        return $count === 1;
+    }
+
+    public function update_password ($email, $new_password)
+    {
+        $query = $this->db
+            ->set('password', $new_password)
+            ->where('email', $email);
+            
+        if (!$query->update('user')) {
+            return $this->db->error();
+        }
+
+        return true;
     }
 }

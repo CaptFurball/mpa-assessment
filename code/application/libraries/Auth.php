@@ -23,8 +23,19 @@ class Auth
 
     public function validate ($username, $password)
     {
-        $user = $this->CI->user->fetchByUsername($username);
+        $user = $this->CI->user->fetch_by_username($username);
 
         return !empty($user) && password_verify($password, $user['password']);
+    }
+
+    public function reset_password ($email)
+    {
+        $new_password = md5(uniqid($email, true));
+        
+        if ($this->CI->user->exists($email)) {
+            $this->CI->user->update_password($email, $this->hash($new_password));
+        }
+
+        return $new_password;
     }
 }

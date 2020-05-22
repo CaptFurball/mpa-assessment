@@ -1,6 +1,8 @@
 <html>
     <head></head>
     <body>
+        <?= $this->session->flashdata('error');?>
+
         <form method="POST" action="/auth/login">
             <label for="username">Username:</label>
             <input type="text" name="username" value="<?= set_value('username'); ?>"><br><br>
