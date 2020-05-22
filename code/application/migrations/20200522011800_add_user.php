@@ -29,6 +29,10 @@ class Migration_Add_user extends CI_Migration {
                         'active' => [
                             'type' => 'BOOLEAN',
                             'default' => false
+                        ],
+                        'retry' => [
+                            'type' => 'INT',
+                            'default' => 0
                         ]
                     ]
                 );
