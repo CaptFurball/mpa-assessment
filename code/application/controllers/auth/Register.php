@@ -41,4 +41,28 @@ class Register extends CI_Controller
 
         redirect('auth/register');
     }
+
+    public function mail ()
+    {
+        $this->load->library('email');
+
+        $this->email->initialize([
+            'protocol' => 'smtp',
+            'smtp_host' => 'smtp.mailtrap.io',
+            'smtp_user' => 'd84646f5c772c7',
+            'smtp_pass' => '4fd8791b4f9f7d',
+            'smtp_port' => 2525
+        ]);
+
+        $this->email->from('edwardlimyeesiangli@airasia.com', 'Edward Lim');
+        $this->email->to('elys.1993a@gmail.com', 'Edward Lim');
+        $this->email->subject('test');
+        $this->email->message('Hello friend');
+
+        if ($this->email->send()) {
+            echo "success";
+        } else {
+            echo $this->email->print_debugger();
+        }
+    }
 }
