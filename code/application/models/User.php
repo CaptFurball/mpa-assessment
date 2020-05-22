@@ -23,8 +23,11 @@ class User extends CI_Model
     public function fetch_by_username ($username)
     {
         $result = $this->db
+            ->from('user')
+            ->where('username', $username)
+            ->where('active', true)
             ->limit(1)
-            ->get_where('user', ['username' => $username])
+            ->get()
             ->result_array();
 
         return reset($result);
@@ -45,6 +48,45 @@ class User extends CI_Model
     {
         $query = $this->db
             ->set('password', $new_password)
+            ->where('email', $email);
+            
+        if (!$query->update('user')) {
+            return $this->db->error();
+        }
+
+        return true;
+    }
+
+    public function activate_user ($email)
+    {
+        $query = $this->db
+            ->set('active', true)
+            ->where('email', $email);
+            
+        if (!$query->update('user')) {
+            return $this->db->error();
+        }
+
+        return true;
+    }
+
+    public function deactivate_user ($email)
+    {
+        $query = $this->db
+            ->set('active', false)
+            ->where('email', $email);
+            
+        if (!$query->update('user')) {
+            return $this->db->error();
+        }
+
+        return true;
+    }
+
+    public function update_retry ($email, $retry)
+    {
+        $query = $this->db
+            ->set('retry', $retry)
             ->where('email', $email);
             
         if (!$query->update('user')) {

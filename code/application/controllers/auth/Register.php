@@ -41,4 +41,15 @@ class Register extends CI_Controller
 
         redirect('auth/register');
     }
+
+    public function verify ($code = null)
+    {
+        if ($code && $this->auth->verify($code)) {
+            $this->session->set_flashdata('success', 'Your account is successfully activated');
+            redirect('auth/login');
+        } else {
+            $this->session->set_flashdata('error', 'Your code is not valid');
+            redirect('auth/register');
+        }
+    }
 }
