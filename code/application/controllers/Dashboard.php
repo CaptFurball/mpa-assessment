@@ -5,6 +5,10 @@ class Dashboard extends MY_Controller
 {
 	public function index()
 	{
-		$this->load->view('welcome_message');
+        $data = [
+            'username' => $this->session->userdata('username')
+        ];
+
+		$this->load->view('welcome_message', $data);
 	}
 }

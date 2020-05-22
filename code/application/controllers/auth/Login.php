@@ -51,4 +51,10 @@ class Login extends CI_Controller
             $this->session->set_flashdata('temporary_password', 'Password:' . $res);
         }
     }
+
+    public function logout ()
+    {
+        $this->auth->logout();
+        redirect('auth/login');
+    }
 }

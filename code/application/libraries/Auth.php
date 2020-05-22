@@ -49,4 +49,9 @@ class Auth
 
         return $new_password;
     }
+
+    public function logout ()
+    {
+        session_destroy();
+    }
 }
