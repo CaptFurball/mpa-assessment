@@ -2,6 +2,7 @@
     <head></head>
     <body>
         <?= $this->session->flashdata('error');?>
+        <?= $this->session->flashdata('success');?>
 
         <form method="POST" action="/auth/login">
             <label for="username">Username:</label>

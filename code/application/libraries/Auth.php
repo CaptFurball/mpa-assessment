@@ -15,26 +15,12 @@ class Auth
     public function register ($username, $email, $password)
     {
         $res = $this->CI->user->create($username, $email, $this->hash($password));
-        $this->request_verify($email);
-
-        return $res;
-    }
-
-    public function request_verify ($email)
-    {
+        
         $code = md5(uniqid($email, true));
         $expire = date('Y-m-d H:i:s', strtotime('+1 hour'));
-
         $this->CI->verify->create($email, $code, $expire, 'activate_account');
-    }
 
-    public function verify_account ($code)
-    {
-        $res = $this->verify($code);
-
-        if ($res !== false) {
-            $this->CI->user->activate_user($res['email']);
-        }
+        return $res;
     }
 
     public function verify ($code)
@@ -46,16 +32,16 @@ class Auth
             $callback = $verification['callback'];
             $email = $verification['email'];
 
-            if (is_callable([$this, $callback]) && $this->$callback($email)) {
+            if (is_callable([$this, $callback])) {
                 $this->CI->verify->burn_code($code);
-                return true;
+                return $this->$callback($email);
             }
         } else {
             return false;
         }
     }
 
-    private function activate_account($email)
+    private function activate_account ($email)
     {
         return $this->CI->user->activate_user($email);
     }
@@ -81,6 +67,13 @@ class Auth
         } else {
             return false;
         }
+    }
+
+    public function request_reset_password ($email)
+    {
+        $code = md5(uniqid($email, true));
+        $expire = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        $this->CI->verify->create($email, $code, $expire, 'reset_password');
     }
 
     public function reset_password ($email)

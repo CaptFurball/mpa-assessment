@@ -33,23 +33,33 @@ class Login extends CI_Controller
         }
     }
 
-    public function reset ()
+    public function reset ($code = null)
     {
+        if ($code) {
+            $this->_reset($code);
+        }
+
         if ($this->input->method() == 'post' && $this->form_validation->run()) {
-            $this->_reset();
+            $this->_request_reset();
         }
 
         $this->load->view('auth/reset');
     }
 
-    public function _reset ()
+    public function _request_reset ()
     {
         $email = $this->input->post('email');
-        $res   = $this->auth->reset_password($email);
+        $this->auth->request_reset_password($email);
 
-        if (is_string($res)) {
-            $this->session->set_flashdata('temporary_password', 'Password:' . $res);
-        }
+        $this->session->set_flashdata('success', 'Password reset requested, please verify your email');
+        redirect('auth/login');
+    }
+
+    public function _reset ($code)
+    {
+        $new_password = $this->auth->verify($code);
+        $this->session->set_flashdata('success', 'New Password:' . $new_password);
+        redirect('auth/login');
     }
 
     public function logout ()
