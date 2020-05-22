@@ -13,13 +13,7 @@ class Auth
 
     public function register ($username, $email, $password)
     {
-        try {
-            $this->CI->user->create($username, $email, $this->hash($password));
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-
-        return true;
+        return $this->CI->user->create($username, $email, $this->hash($password));
     }
 
     public function hash ($password)

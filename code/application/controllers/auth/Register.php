@@ -28,9 +28,17 @@ class Register extends CI_Controller
         $password = $this->input->post('password');
 
         $res = $this->auth->register($username, $email, $password);
-
+        
         if ($res !== true) {
-            $this->session->set_flashdata('error', $res);
+            if ($res['code'] === 1062) {
+                $this->session->set_flashdata('error', 'Username or email is in used');
+            } else {
+                $this->session->set_flashdata('error', 'Something unexpected has happened');
+            }
+        } else {
+            $this->session->set_flashdata('success', 'Your account is successfully created, please check your email');
         }
+
+        redirect('auth/register');
     }
 }
