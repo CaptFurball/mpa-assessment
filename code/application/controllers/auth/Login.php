@@ -24,7 +24,7 @@ class Login extends CI_Controller
         $username = $this->input->post('username');
         $password = $this->input->post('password');
 
-        $res = $this->auth->validate($username, $password);
+        $res = $this->auth->authenticate($username, $password);
 
         if ($res === true) {
             redirect('dashboard');
