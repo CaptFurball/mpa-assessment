@@ -52,6 +52,8 @@ class Auth
 
     public function logout ()
     {
-        session_destroy();
+        if ($this->CI->session->userdata('authenticated')) {
+            session_destroy();
+        }
     }
 }
