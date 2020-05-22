@@ -11,9 +11,14 @@ class Auth
         $this->CI->load->model('user');
     }
 
-    public function register ()
+    public function register ($username, $email, $password)
     {
-        echo "user registered";
+        $this->CI->user->createUser($username, $email, $this->hash($password));
+    }
+
+    public function hash ($password)
+    {
+        return password_hash($password, PASSWORD_BCRYPT);
     }
 
     public function login ()
