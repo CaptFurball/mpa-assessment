@@ -13,7 +13,7 @@ class Auth
 
     public function register ($username, $email, $password)
     {
-        $this->CI->user->createUser($username, $email, $this->hash($password));
+        $this->CI->user->create($username, $email, $this->hash($password));
     }
 
     public function hash ($password)
@@ -21,8 +21,10 @@ class Auth
         return password_hash($password, PASSWORD_BCRYPT);
     }
 
-    public function login ()
+    public function validate ($username, $password)
     {
-        echo "user logged in";
+        $user = $this->CI->user->fetchByUsername($username);
+
+        return !empty($user) && password_verify($password, $user['password']);
     }
 }

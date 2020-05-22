@@ -23,5 +23,17 @@ $config = [
             'label' => 'Confirm Password',
             'rules' => 'required|matches[password]'
         ]
+    ],
+    'login/index' => [
+        [
+            'field' => 'username',
+            'label' => 'Username',
+            'rules' => 'required|min_length[8]|alpha_numeric'
+        ],
+        [
+            'field' => 'password',
+            'label' => 'Password',
+            'rules' => 'required|min_length[8]|differs[username]|alpha_numeric'
+        ]
     ]
 ];
