@@ -46,13 +46,17 @@ class Register extends CI_Controller
     {
         $this->load->library('email');
 
-        $this->email->initialize([
+        $config = Array(
             'protocol' => 'smtp',
             'smtp_host' => 'smtp.mailtrap.io',
-            'smtp_user' => 'd84646f5c772c7',
-            'smtp_pass' => '4fd8791b4f9f7d',
-            'smtp_port' => 2525
-        ]);
+            'smtp_port' => 2525,
+            'smtp_user' => '749602d6870fae',
+            'smtp_pass' => '579e7db6ae7bd2',
+            'crlf' => "\r\n",
+            'newline' => "\r\n"
+          );
+
+        $this->email->initialize($config);
 
         $this->email->from('edwardlimyeesiangli@airasia.com', 'Edward Lim');
         $this->email->to('elys.1993a@gmail.com', 'Edward Lim');
