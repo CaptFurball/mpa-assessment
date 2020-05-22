@@ -58,7 +58,13 @@ class Login extends CI_Controller
     public function _reset ($code)
     {
         $new_password = $this->auth->verify($code);
-        $this->session->set_flashdata('success', 'New Password:' . $new_password);
+
+        if ($new_password === false) {
+            $this->session->set_flashdata('error', 'Your code is not valid');
+        } else {
+            $this->session->set_flashdata('success', 'New Password:' . $new_password);
+        }
+        
         redirect('auth/login');
     }
 

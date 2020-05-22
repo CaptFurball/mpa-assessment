@@ -1,8 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+require('application/libraries/auth/Email_Verification.php');
+
 class Auth
 {
+    use Email_Verification;
+
     private $CI;
 
     const RETRY_THRESHOLD = 5;
@@ -56,35 +60,6 @@ class Auth
     public function hash ($password)
     {
         return password_hash($password, PASSWORD_BCRYPT);
-    }
-
-    /**
-     * Perform code verification which was sent to email upon issuance.
-     * Upon success verification, a callback is called which was stored
-     * in the table column 'callback'
-     * 
-     * @var string $code A randomly generated token code sent to user's email
-     *                   to verify if an email account belongs to the user
-     * 
-     * @return mixed Returns Boolean false if verification fails, otherwise
-     *               depends on the callback method.
-     */
-    public function verify ($code)
-    {
-        $verification = $this->CI->verify->fetch_by_code($code);
-        
-        if (!empty($verification)) {
-
-            $callback = $verification['callback'];
-            $email = $verification['email'];
-
-            if (is_callable([$this, $callback])) {
-                $this->CI->verify->burn_code($code);
-                return $this->$callback($email);
-            }
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -155,9 +130,11 @@ class Auth
      */
     public function request_reset_password ($email)
     {
-        $code = md5(uniqid($email, true));
-        $expire = date('Y-m-d H:i:s', strtotime('+1 hour'));
-        $this->CI->verify->create($email, $code, $expire, 'reset_password');
+        if ($this->CI->user->exists($email)) {
+            $code = md5(uniqid($email, true));
+            $expire = date('Y-m-d H:i:s', strtotime('+1 hour'));
+            $this->CI->verify->create($email, $code, $expire, 'reset_password');
+        }
     }
 
     /**
@@ -171,9 +148,7 @@ class Auth
     {
         $new_password = md5(uniqid($email, true));
         
-        if ($this->CI->user->exists($email)) {
-            $this->CI->user->update_password($email, $this->hash($new_password));
-        }
+        $this->CI->user->update_password($email, $this->hash($new_password));
 
         return $new_password;
     }
