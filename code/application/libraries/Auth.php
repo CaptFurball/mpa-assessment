@@ -56,6 +56,8 @@ class Auth
         $user = $this->CI->user->fetch_by_username($username);
 
         if (!empty($user) && password_verify($password, $user['password'])) {
+            $this->CI->user->update_retry($user['email'], 0);
+
             $data = array(
 				'username' => $user['username'],
 				'authenticated' => true,
@@ -65,7 +67,19 @@ class Auth
             
             return true;
         } else {
+            $this->failed_login($user);
             return false;
+        }
+    }
+
+    public function failed_login ($user)
+    {
+        $retry = $user['retry'] + 1;
+
+        if ($retry >= 5) {
+            $this->CI->user->deactivate_user($user['email']);
+        } else {
+            $this->CI->user->update_retry($user['email'], $retry);
         }
     }
 

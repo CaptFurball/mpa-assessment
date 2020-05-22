@@ -69,4 +69,30 @@ class User extends CI_Model
 
         return true;
     }
+
+    public function deactivate_user ($email)
+    {
+        $query = $this->db
+            ->set('active', false)
+            ->where('email', $email);
+            
+        if (!$query->update('user')) {
+            return $this->db->error();
+        }
+
+        return true;
+    }
+
+    public function update_retry ($email, $retry)
+    {
+        $query = $this->db
+            ->set('retry', $retry)
+            ->where('email', $email);
+            
+        if (!$query->update('user')) {
+            return $this->db->error();
+        }
+
+        return true;
+    }
 }
